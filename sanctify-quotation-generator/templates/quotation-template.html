@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<!--
+  Sanctify Quotation — branded print-to-PDF template.
+  The model fills every {{PLACEHOLDER}} and repeats/edits the marked blocks.
+  To export: open in a browser → Ctrl/Cmd+P → Save as PDF (enable Background graphics).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sanctify Quotation — {{CLIENT_NAME}}</title>
+<style>
+  :root{
+    --purple:#8E0F8E;        /* top/footer bar */
+    --purple-bar:#9C1A9C;    /* section bars */
+    --maroon:#660066;        /* page titles */
+    --pink:#C20B58;          /* accent */
+    --ink:#1A1A1A;
+    --grey:#666;
+    --zebra:#F5EAF5;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:Calibri,"Segoe UI",Candara,Arial,sans-serif;
+    color:var(--ink);
+    font-size:12pt;
+    line-height:1.45;
+    background:#fff;
+  }
+  /* A4 page shell */
+  .page{
+    position:relative;
+    width:210mm;
+    min-height:297mm;
+    margin:0 auto;
+    padding:0 0 34mm 0;      /* leave room for footer bar */
+    background:#fff;
+    page-break-after:always;
+    overflow:hidden;
+  }
+  .page:last-child{page-break-after:auto;}
+
+  /* faint E watermark (optional, brand touch) */
+  .page::before{
+    content:"";
+    position:absolute; inset:0;
+    background:radial-gradient(closest-side,#00000008,transparent 70%);
+    pointer-events:none;
+  }
+
+  /* top purple bar */
+  .topbar{
+    background:var(--purple);
+    color:#fff;
+    text-align:center;
+    font-weight:700;
+    letter-spacing:.3px;
+    padding:7px 10px;
+    font-size:12.5pt;
+  }
+
+  .content{padding:14mm 16mm 0 16mm;}
+
+  /* cover / logo */
+  .logo-wrap{text-align:center;margin:14mm 0 6mm;}
+  .logo-wrap img{max-width:360px;width:60%;height:auto;}
+  .cover-sub{
+    text-align:center;color:var(--ink);font-weight:600;
+    letter-spacing:.5px;margin:2mm 0 10mm;font-size:12pt;
+  }
+  .cover-title{
+    text-align:center;font-size:26pt;font-weight:700;color:var(--ink);
+    line-height:1.25;margin:14mm 0 4mm;
+  }
+  .cover-for{text-align:center;font-size:13pt;margin-top:8mm;}
+  .cover-for b{font-size:16pt;}
+
+  /* page title (maroon underlined) */
+  h1.page-title{
+    color:var(--maroon);
+    font-size:18pt;
+    font-weight:700;
+    text-decoration:underline;
+    margin:0 0 8px;
+  }
+
+  /* section bar */
+  .section-bar{
+    background:var(--purple-bar);
+    color:#fff;
+    font-weight:700;
+    font-size:13pt;
+    padding:6px 12px;
+    margin:14px 0 10px;
+  }
+
+  /* feature list (two columns: label ..... value) */
+  .features{list-style:none;padding:0;margin:0 0 6px;}
+  .features li{
+    display:flex;align-items:baseline;
+    padding:3px 0;
+  }
+  .features li .lbl{flex:0 0 auto;}
+  .features li .lbl::before{content:"\2756  ";color:var(--maroon);}
+  .features li .dots{
+    flex:1 1 auto;border-bottom:1px dotted #bbb;margin:0 8px;transform:translateY(-3px);
+  }
+  .features li .val{flex:0 0 auto;font-weight:600;}
+
+  .checklist{list-style:none;padding:0;margin:8px 0;}
+  .checklist li{padding:4px 0;}
+  .checklist li::before{content:"\2713  ";color:var(--maroon);font-weight:700;}
+
+  /* pricing tables */
+  table.qt{width:100%;border-collapse:collapse;margin:6px 0 14px;font-size:11.5pt;}
+  table.qt caption{
+    text-align:left;font-weight:700;color:var(--maroon);
+    padding:4px 0;font-size:12.5pt;
+  }
+  table.qt th{
+    background:var(--purple-bar);color:#fff;text-align:left;
+    padding:7px 10px;font-weight:700;border:1px solid var(--purple-bar);
+  }
+  table.qt td{padding:6px 10px;border:1px solid #d8c3d8;vertical-align:top;}
+  table.qt th.num,table.qt td.num{width:52px;text-align:center;}
+  table.qt th.qty,table.qt td.qty{width:120px;text-align:center;}
+  table.qt th.price,table.qt td.price{width:130px;text-align:right;white-space:nowrap;}
+  table.qt tbody tr:nth-child(even){background:var(--zebra);}
+  table.qt tr.total td{
+    background:#efe0ef;font-weight:700;border-top:2px solid var(--purple-bar);
+  }
+  table.qt tr.total td.price{color:var(--maroon);}
+
+  /* grand total block */
+  .totals{
+    margin:10px 0 6px;width:60%;margin-left:auto;border-collapse:collapse;font-size:12pt;
+  }
+  .totals td{padding:6px 10px;border-bottom:1px solid #ddd;}
+  .totals td.k{color:var(--grey);}
+  .totals td.v{text-align:right;font-weight:600;white-space:nowrap;}
+  .totals tr.grand td{
+    border-top:2px solid var(--purple-bar);border-bottom:none;
+    font-size:14pt;font-weight:700;color:var(--maroon);
+  }
+
+  .notes{margin:12px 0;padding:0 0 0 2px;}
+  .notes h3{color:var(--maroon);margin:12px 0 4px;font-size:12.5pt;}
+  .notes ul{margin:4px 0;padding-left:20px;}
+  .notes li{margin:2px 0;}
+
+  .prose p{margin:8px 0;}
+  .prose h2{color:var(--maroon);font-size:14pt;margin:14px 0 4px;}
+
+  .sign{margin-top:20mm;}
+  .sign .name{font-weight:700;font-size:13pt;}
+  .sign .role{color:var(--grey);}
+
+  /* footer bar (repeats on each page) */
+  .footer{
+    position:absolute;left:0;right:0;bottom:0;
+    background:var(--purple);color:#fff;text-align:center;
+    font-size:9.5pt;font-weight:600;line-height:1.4;padding:7px 10px;
+  }
+  .footer a{color:#fff;text-decoration:none;}
+  .pageno{position:absolute;right:16mm;bottom:36mm;color:var(--grey);font-size:9.5pt;}
+
+  @media print{
+    body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .page{margin:0;box-shadow:none;}
+  }
+  @page{size:A4;margin:0;}
+</style>
+</head>
+<body>
+
+<!-- ============================================================= -->
+<!-- COVER PAGE  (keep for proposals; for a plain 1-page quote you  -->
+<!-- may merge the cover into the quotation page)                   -->
+<!-- ============================================================= -->
+<section class="page">
+  <div class="topbar">SANCTIFY &ndash; Advertise to promote&hellip;.</div>
+  <div class="content">
+    <div class="logo-wrap">
+      <!-- Optional: paste the logo data URI here as src to show the real logo -->
+      <img src="{{LOGO_SRC}}" alt="Sanctify — advertise to promote" onerror="this.style.display='none'">
+    </div>
+    <div class="cover-sub">AWARD-WINNING ADVERTISING &amp; DIGITAL MARKETING AGENCY</div>
+    <div class="cover-title">{{QUOTATION_TITLE}}</div>
+    <div class="cover-for">Prepared for: <b>{{CLIENT_NAME}}{{CLIENT_LOCATION_SUFFIX}}</b></div>
+    <div class="cover-for" style="margin-top:6mm;color:var(--grey);font-size:11pt;">
+      {{QUOTATION_NUMBER_LINE}} &nbsp;&bull;&nbsp; Date: {{QUOTATION_DATE}}
+    </div>
+  </div>
+  <div class="footer">
+    Corporate Office: #171/1-A, MES College Road, Bharat Nagar Colony, Vasco da Gama, Goa &ndash; 403726.<br>
+    Mob: +91 99233 52923, e-mail: designer@sanctify.in, Website: https://www.sanctify.in/
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- OPTIONAL: AGENCY PROFILE PAGE  (delete if staff declined)      -->
+<!-- Fill from references/agency-profile.md                         -->
+<!-- ============================================================= -->
+<section class="page" data-optional="profile">
+  <div class="topbar">SANCTIFY &ndash; Advertise to promote&hellip;.</div>
+  <div class="content prose">
+    <h1 class="page-title">Executive Brand Overview</h1>
+    <p>{{PROFILE_PARAGRAPH}}</p>
+    <div class="section-bar">What Makes Sanctify Different</div>
+    <ul class="checklist">{{PROFILE_BULLETS}}</ul>
+  </div>
+  <div class="footer">
+    Corporate Office: #171/1-A, MES College Road, Bharat Nagar Colony, Vasco da Gama, Goa &ndash; 403726.<br>
+    Mob: +91 99233 52923, e-mail: designer@sanctify.in, Website: https://www.sanctify.in/
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- QUOTATION PAGE(S)  — repeat this block per package/section     -->
+<!-- ============================================================= -->
+<section class="page">
+  <div class="topbar">Quotation</div>
+  <div class="content">
+    <h1 class="page-title">{{SECTION_TITLE}}</h1>
+
+    <!-- OPTIONAL feature list (website packages). Delete if not used. -->
+    <div class="section-bar">Features</div>
+    <ul class="features">
+      {{FEATURE_ROWS}}
+      <!-- each: <li><span class="lbl">Disk Space</span><span class="dots"></span><span class="val">10 Gb</span></li> -->
+    </ul>
+
+    <!-- pricing table(s). Repeat <table class="qt"> per sub-section. -->
+    <table class="qt">
+      <caption>{{TABLE_CAPTION}}</caption>
+      <thead>
+        <tr><th class="num">Sr. No.</th><th>Services</th><th class="qty">Quantity</th><th class="price">Pricing</th></tr>
+      </thead>
+      <tbody>
+        {{TABLE_ROWS}}
+        <!-- each: <tr><td class="num">1</td><td>Static Creative Designing</td><td class="qty">4 Posts</td><td class="price">&#8377;3,200/-</td></tr> -->
+        <tr class="total"><td></td><td colspan="2">Total</td><td class="price">{{TABLE_TOTAL}}</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Grand totals block (use once, on the final quotation page) -->
+    <table class="totals">
+      <tr><td class="k">Subtotal</td><td class="v">{{SUBTOTAL}}</td></tr>
+      <tr><td class="k">GST @ 18% (extra)</td><td class="v">{{GST}}</td></tr>
+      <tr class="grand"><td class="k">Grand Total</td><td class="v">{{GRAND_TOTAL}}</td></tr>
+    </table>
+
+    <!-- Commercial notes -->
+    <div class="notes">
+      <h3>Commercial Notes</h3>
+      <ul>{{NOTES}}</ul>
+      <p style="color:var(--grey);font-size:10.5pt;margin-top:8px;">{{VALIDITY}}</p>
+    </div>
+  </div>
+  <div class="footer">
+    Corporate Office: #171/1-A, MES College Road, Bharat Nagar Colony, Vasco da Gama, Goa &ndash; 403726.<br>
+    Mob: +91 99233 52923, e-mail: designer@sanctify.in, Website: https://www.sanctify.in/
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- OPTIONAL: CLOSING / SIGNATORY PAGE                              -->
+<!-- ============================================================= -->
+<section class="page" data-optional="closing">
+  <div class="topbar">SANCTIFY &ndash; Advertise to promote&hellip;.</div>
+  <div class="content prose">
+    <h1 class="page-title">Let&rsquo;s Build a Powerful Digital Presence</h1>
+    <p>{{CLOSING_PARAGRAPH}}</p>
+    <div class="sign">
+      <div class="name">{{SIGNATORY_NAME}}</div>
+      <div class="role">{{SIGNATORY_ROLE}}</div>
+      <div class="role">Sanctify, Goa &nbsp;|&nbsp; Advertising | Branding | SEO | Performance Marketing | Creative Strategy</div>
+    </div>
+  </div>
+  <div class="footer">
+    Corporate Office: #171/1-A, MES College Road, Bharat Nagar Colony, Vasco da Gama, Goa &ndash; 403726.<br>
+    Mob: +91 99233 52923, e-mail: designer@sanctify.in, Website: https://www.sanctify.in/
+  </div>
+</section>
+
+</body>
+</html>

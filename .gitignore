@@ -1,0 +1,16 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Local preview / render artifacts (not part of the skill)
+_preview*
+*_logotest*
+*.tmp
+
+# Python (only if anyone experiments locally; skill itself needs none)
+__pycache__/
+*.pyc
+.venv/
+venv/

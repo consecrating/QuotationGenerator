@@ -17,6 +17,8 @@ underlined titles, Calibri type, the ₹ pricing tables, and the exact footer.
 | `SKILL.md` | The instructions the AI follows (the "brain"). **This is what you paste in.** |
 | `templates/quotation-template.html` | The branded HTML the AI fills in. |
 | `references/service-catalog.md` | Your standard services & rate card. |
+| `references/pricing-policy.md` | Discount ladder, payment terms, scope protection, when to refuse. |
+| `references/industry-playbooks.md` | Per-industry positioning, service mix, likely objections. |
 | `references/agency-profile.md` | Reusable "About / Why Sanctify" copy. |
 | `examples/example-digital-marketing.html` | Finished sample: SMM / marketing quote. |
 | `examples/example-website-designing.html` | Finished sample: website quote with Package 1/2/3 tiers + add-ons. |
@@ -39,6 +41,14 @@ underlined titles, Calibri type, the ₹ pricing tables, and the exact footer.
 > **Ctrl+P** (Windows) or **Cmd+P** (Mac) → set **Destination = Save as PDF** →
 > turn on **"Background graphics"** → **Save**.
 
+### When to use the Quote Engine instead
+
+For a quote mixing **one-time + monthly + yearly** charges, or with a discount, use
+[`../engine/sanctify-quote-engine.html`](../engine/sanctify-quote-engine.html). Its
+maths is deterministic and unit-tested, whereas an AI can make arithmetic slips on
+multi-bucket totals. The skill knows about the engine and can hand it a ready-made
+JSON block ("Mode A" in `SKILL.md`).
+
 ---
 
 ## Setup — ChatGPT
@@ -47,10 +57,14 @@ underlined titles, Calibri type, the ₹ pricing tables, and the exact footer.
 1. ChatGPT → left sidebar → **GPTs → + Create → Configure**.
 2. **Name:** `Sanctify Quotation Generator`.
 3. **Instructions:** paste the entire contents of `SKILL.md`.
-4. **Knowledge:** upload `templates/quotation-template.html`,
-   `references/service-catalog.md`, `references/agency-profile.md`, and
-   (optional) `examples/example-digital-marketing.html`.
+4. **Knowledge:** upload `templates/quotation-template.html`, all four files from
+   `references/` (**service-catalog, pricing-policy, industry-playbooks,
+   agency-profile**), and both files from `examples/`.
 5. Save (Only me is fine). Open it and type: *"A client just called."*
+
+> The two most valuable knowledge files are **`pricing-policy.md`** (stops
+> under-pricing and enforces approval on discounts) and **`industry-playbooks.md`**
+> (makes proposals read bespoke instead of generic). Don't skip them.
 
 **Quick option: a Project or a normal chat.**
 - Create a **Project**, add the same files to the project files, and put "Follow

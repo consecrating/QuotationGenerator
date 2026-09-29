@@ -138,8 +138,18 @@ engine agrees. If they differ, the engine is right — say so and investigate.
 
 ## OUTPUT — MODE B (document)
 
-1. Start from `templates/quotation-template.html` (the Sanctify logo is already
-   embedded — leave it).
+1. Start from `templates/quotation-template.html`.
+
+   > **Logo handling — important.** The template ships with the logo embedded as a
+   > very long base64 data URI. **Never try to reproduce that base64 string in chat**
+   > — it wastes thousands of tokens and will get truncated or corrupted. Instead
+   > output the cover image tag as:
+   > `<img src="sanctify-logo.png" alt="Sanctify" onerror="this.style.display='none'">`
+   > and tell the staff member to keep `sanctify-logo.png` in the same folder as the
+   > saved `quotation.html`. If they'd rather have a single portable file, tell them to
+   > paste the contents of `assets/logo-datauri.txt` into that `src=""` themselves.
+   > The quote still looks correct without the logo — the purple bars and footer carry
+   > the branding.
 2. Replace every `{{PLACEHOLDER}}`.
 3. Build one `<table class="qt">` **per billing bucket** (Sr. No. | Services |
    Quantity | Pricing) each with its own Total row.

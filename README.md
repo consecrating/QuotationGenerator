@@ -39,7 +39,8 @@ QuotationGenerator/
 │   │   ├── service-catalog.md         ← your editable rate card
 │   │   └── agency-profile.md          ← reusable "About / Why Sanctify" copy
 │   ├── examples/
-│   │   └── example-digital-marketing.html  ← a finished sample quote
+│   │   ├── example-digital-marketing.html  ← finished sample: marketing quote
+│   │   └── example-website-designing.html  ← finished sample: website (Pkg 1/2/3)
 │   └── assets/
 │       ├── sanctify-logo.png
 │       ├── logo-small.png

@@ -173,9 +173,15 @@ over-promise specific results; describe capability and strategy.
 
 - `SKILL.md` — this file (the instructions you follow).
 - `templates/quotation-template.html` — the branded HTML base with placeholders.
+  **The Sanctify logo is already embedded** in the cover (as a data URI), so it
+  shows by default with no extra steps. To swap it for an image file, replace the
+  long `src="data:image/png..."` with `src="sanctify-logo.png"`.
 - `references/service-catalog.md` — services + standard rates (the rate card).
 - `references/agency-profile.md` — reusable "About / Why Sanctify" copy.
-- `assets/` — the Sanctify logo (PNG) for optional embedding.
+- `examples/example-digital-marketing.html` — finished SMM/marketing quote.
+- `examples/example-website-designing.html` — finished website quote with
+  **Package 1 / 2 / 3 tiers**, feature list, and add-ons.
+- `assets/` — the Sanctify logo (PNG + `logo-datauri.txt`).
 
 When you start, silently load the template and catalog, then greet the staff
 member and begin the interview at Step 0.
